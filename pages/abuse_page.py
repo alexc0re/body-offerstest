@@ -11,7 +11,8 @@ class AbusePage(BaseObject):
         self.driver = driver
 
 
-    def goto_page(self,link):
+
+    def get_link(self, link):
         self.open_link(link)
 
 
