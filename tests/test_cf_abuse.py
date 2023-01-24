@@ -1,9 +1,10 @@
+import time
+from base_object.locators import AbusePageLocators
 import pytest
-from links.linksList import test_links
 
 
-@pytest.mark.parametrize('link', test_links)
-def test_abused_offers(abuse_page, link):
-    abuse_page.get_link(link)
-    abuse_page.find_cf_abuse()
-    assert 1 == 1
+
+
+def test_find_prices(abuse_page):
+    abuse_page.get_link('shop.perfumersapprentice.com/c-51-aroma-molecules-a-e.aspx')
+    abuse_page.count_find_elements()

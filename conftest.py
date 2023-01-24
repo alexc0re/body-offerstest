@@ -4,7 +4,6 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from pages.abuse_page import AbusePage
-from links.linksList import test_links
 options = Options()
 
 
@@ -29,6 +28,7 @@ def driver(request):
     yield driver
     print("\nquit browser..")
     driver.quit()
+
 
 
 @pytest.fixture
