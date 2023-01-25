@@ -6,5 +6,8 @@ import pytest
 
 
 def test_find_prices(abuse_page):
-    abuse_page.get_link('shop.perfumersapprentice.com/c-51-aroma-molecules-a-e.aspx')
-    abuse_page.count_find_elements()
+    # abuse_page.get_link('shop.perfumersapprentice.com/c-84-bulk-sizes.aspx')
+    # abuse_page.login()
+    # abuse_page.count_find_elements()
+    abuse_page.compare_lists()
+
