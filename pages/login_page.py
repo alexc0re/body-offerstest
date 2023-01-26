@@ -1,22 +1,39 @@
 import itertools
+import json
 import time
 from support.logger import log_method
 import logging as log
 import pytest
 import sys
+import deepdiff
 import csv
 from base_object.base import BaseObject
 from base_object.locators import AbusePageLocators
+
+data ={'ABSINTHE FLAVOR **': ['Karen petuh - $1000.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'ABSINTHE FLAVOR CONCENTRATE': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'ABSINTHE II FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'ACAI FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'ACETYL PYRAZINE 5 PG': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'ALMOND AMARETTO FLAVOR': ['gallon - $11100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'ALMOND FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'APPLE (TART GRANNY SMITH) FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'APPLE (TART GREEN APPLE) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'APPLE CANDY FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'APPLE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (88888) 2 week lead time - $742.00 (USD)'], 'APPLE PIE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'APRICOT FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BANANA CREAM FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BANANA FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $7422.00 (USD)'], 'BANANA NUT BREAD FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BANANAS FOSTER FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BAVARIAN CREAM FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BERRY CEREAL FLAVOR': ['gallon 1- $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BERRY MIX FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BERRY TOBACCO TYPE FLAVOR CC': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BI1RCH BEER AND TOBACCO TYPE FLAVOR CC': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BITTER NUT EXTRA FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BITTERSWEET CHOCOLATE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead1 time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLACK CHERRY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLACK CURRANT FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $3745.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLACK HONEY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLACK TEA DELUXE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $7422.00 (USD)'], 'BLACK TEA FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLACKBERRY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLUE RASPBERRY FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $3755.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLUEBERRY (RIPE) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLUEBERRY (WILD) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $7242.00 (USD)'], 'BLUEBERRY CANDY FLAVOR (PG)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLUEBERRY CANDY FLAVOR (TRIACETIN)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BLUEBERRY FLAVOR (EXTRA)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BOURBON FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BOYSENBERRY DELUXE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BOYSENBERRY FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BRANDY FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BROWN SUGAR FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BUBBLEGUM (FRUITY) FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BUBBLEGUM FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BUTTER FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BUTTERSCOTCH FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'BUTTERSCOTCH II FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CANNABIS TYPE FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CANTALOUPE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CAPPUCCINO FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CARAMEL (ORIGINAL) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CARAMEL CANDY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CARAMEL CAPPUCCINO FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CARAMEL FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CC SAMPLE PACK - MINT': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CC SAMPLE PACK - TOBACCO': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHAI TEA FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHAI TEA II FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHAMPAGNE TYPE FLAVOR (PG)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHEESECAKE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHEESECAKE FLAVOR (GRAHAM CRUST)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHERRY BLOSSOM (PG)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHERRY EXTRACT FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHILI MANGO FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHOCOLATE COCONUT ALMOND CANDY BAR FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CHOCOLATE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CIGARILLO FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CINNAMON DANISH FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CINNAMON FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CINNAMON RED HOT (PG)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CINNAMON RED HOT FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CINNAMON SPICE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CINNAMON SUGAR COOKIE': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CITRUS PUNCH FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CITRUS PUNCH II FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CLOVE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COCOA ROUNDS FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COCOA TOBACCO TYPE FLAVOR CC': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COCONUT CANDY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COCONUT EXTRA FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COCONUT FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COFFEE (KONA) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COFFEE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COLA CHERRY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COLA FIZZ FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COLA FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CARDAMOM FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COLA SODA FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COLA SYRUP FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COTTON CANDY (CIRCUS)': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'COTTON CANDY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CRANBERRY FLAVOR**': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CRANBERRY SAUCE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CREAM SODA FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CREME DE MENTHE FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CREME DE MENTHE II FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CRUNCHY CEREAL FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CUBANO TYPE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CUCUMBER DELUXE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'CUCUMBER FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DAIRY/MILK FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DARK RUM FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DATE FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DK TOBACCO BASE FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DK TOBACCO II FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DOUBLE CHOCOLATE (CLEAR) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DOUBLE CHOCOLATE (DARK) FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DR. POP FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DRAGONFRUIT FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DULCE DE LECHE CARAMEL FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DULCE DE LECHE FLAVOR **': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX BANANA CREAM': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX BANANAS FOSTER FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX BAVARIAN CREAM': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX BROWN SUGAR FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX BUTTERSCOTCH FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX CARAMEL ORIGINAL': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX CINNAMON DANISH': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX COCONUT CANDY FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX COCONUT FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)'], 'DX FROSTED DONUT FLAVOR': ['gallon - $100.00 (USD)', 'case (4) 2week lead time - $375.00 (USD)', 'double case (8) 2 week lead time - $742.00 (USD)']}
+names_list = {}
+
+
+
+def dict_compare(d1, d2):
+    d1_keys = set(d1.keys())
+    d2_keys = set(d2.keys())
+    shared_keys = d1_keys.intersection(d2_keys)
+    added = d1_keys - d2_keys
+    removed = d2_keys - d1_keys
+    modified = {o : (d1[o], d2[o]) for o in shared_keys if d1[o] != d2[o]}
+    same = set(o for o in shared_keys if d1[o] == d2[o])
+    return added, removed, modified, same
+
 
 
 
 class AbusePage(BaseObject):
     log = log_method(logLevel=log.INFO)
+
     def __init__(self, driver):
         super().__init__(driver)
         self.driver = driver
-
-
 
     def get_link(self, link):
         self.open_link(link)
@@ -29,9 +46,8 @@ class AbusePage(BaseObject):
         time.sleep(5)
         self.open_link('shop.perfumersapprentice.com/c-84-bulk-sizes.aspx')
 
-
-
     def count_find_elements(self):
+        global names_list, data
         with open('file.csv', 'w') as f:
             fields = ['Name', 'Price1', 'Price2', 'Price3']
             write = csv.writer(f)
@@ -52,49 +68,34 @@ class AbusePage(BaseObject):
                     aromas_prices = self.find_product_price(element, 'li')
                     spisok.clear()
 
-
                     for price in aromas_prices:
-
                         text = price.text
                         prefix = text[0] + text[1] + text[2] + text[3]
 
                         if prefix == 'gall' or prefix == 'case' or prefix == 'doub':
                             spisok.append(price.text)
-                    all_arr.append(spisok)
+                    names_list.update({str(name.text): spisok})
+                    added, removed, modified, same = dict_compare(names_list, data)
+                    diff = deepdiff.DeepDiff(names_list, data)
+                    json_formatted_str = json.dumps(diff, indent=4)
 
-            print(all_arr)
-            write.writerows(all_arr)
+        print("=========")
+        print("=========")
+        print('+++++++++')
+        print('+++++++++')
+        print('+++++++++')
+        for key , value in names_list.items():
+            print(f'{key}:{value}')
+        print("=========")
+        print("=========")
+        print("=========")
+        print("=========")
+        print(modified)
 
-            # i = 0
-            # for key in all_arr:
-            #     rows = [key]
-            #     # using csv.writer method from CSV package
-            #     write.writerows(rows)
-
-    def compare_lists(self):
-        with open('prices.csv', 'r') as csv_1:
-            with open('file.csv', 'r') as csv_2:
-                reader1 = csv.reader(csv_1, delimiter=',')
-                reader2 = csv.reader(csv_2, delimiter=',')
-                try:
-                    i_line = 0
-                    while True:
-                        row_1 = next(reader1)
-                        row_2 = next(reader2)
-                        i_line += 1
-                        if row_1 != row_2:
-                            for k, item in enumerate(row_1):
-                                if item != row_2[k]:
-                                    print(f"difference Line {i_line}: ")
-                                    print(f"New price {row_1[k-1]}: {row_1[k]}")
-                                    print(f"Old price {row_2[k-1]}: {row_2[k]}")
-                except StopIteration:
-                    print("line numbers differ!")
-                finally:
-                    print(f"lines parsed = {i_line}")
-
-
-    print('end')
-
+        print("=========")
+        print("=========")
+        print("=========")
+        print("=========")
+        print(str(diff))
 
 
