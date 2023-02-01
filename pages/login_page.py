@@ -95,8 +95,8 @@ class AbusePage(BaseObject):
                     else:
                         i += 1
             else:
-                send_telegram(f'New position was added/removed \nOld file:\n{products}  {arr} '
-                              f'\nNew file: \n{products}  {arr2}')
+                send_telegram(f'New position was added/removed \n\nOld file:\n{products}  {arr} '
+                              f'\n\nNew file: \n{products}  {arr2}')
 
 
         print(names_list)
