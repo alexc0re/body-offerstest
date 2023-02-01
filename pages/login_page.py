@@ -82,21 +82,7 @@ class AbusePage(BaseObject):
                     added, removed, modified, same = dict_compare(names_list, data)
                     diff = deepdiff.DeepDiff(names_list, data)
 
-        print("=========")
-        print("=========")
-        print('+++++++++')
-        print('+++++++++')
-        print('+++++++++')
-        for key , value in names_list.items():
-            print(f'{key}:{value}')
-        print("=========")
-        print("=========")
-        print("=========")
-        print("=========")
- #       print(type(modified))
-        print("=========")
-#        print(modified)
-        print("=========")
+        print(names_list)
         for products, prises_list in modified.items():
             arr = prises_list[0]
             arr2 = prises_list[1]
@@ -104,13 +90,14 @@ class AbusePage(BaseObject):
             if len(arr) == len(arr2):
                 while i < len(arr):
                     if arr[i] != arr2[i]:
-                        send_telegram(f" {products} price was changed from  {arr[i]} to {arr2[i]}")
-                        print(f" {products} price was changed from  {arr[i]} to {arr2[i]}")
+                        send_telegram(f" {products} OLD  {arr[i]} NEW {arr2[i]}")
+                        print(f" {products} OLD  {arr[i]} NEW {arr2[i]}")
                         i+=1
                     else:
                         i += 1
             else:
-                print('New position was added/removed')
+                send_telegram(f'New position was added/removed \n Old file:{products}  {arr} '
+                              f'New file: {products}  {arr2}')
                 print(f"Old file:{products}  {arr}")
                 print(f"New file: {products}  {arr2}")
 

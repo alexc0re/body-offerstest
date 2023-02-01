@@ -3,6 +3,11 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 import urllib
 
+# list of elements
+from selenium.webdriver.remote.webelement import WebElement # необходимый импорт
+from selenium.webdriver.support import expected_conditions as ec # необходимый импорт
+from typing import List # необходимый импорт
+
 
 
 
