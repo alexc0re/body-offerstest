@@ -7,13 +7,13 @@ parameters:
       - smoke
       - regression
 
-#schedules:
-#- cron: "0 0 * * *"
-#  displayName: Daily midnight build
-#  branches:
-#    include:
-#    - main
-
+schedules:
+- cron: "0 12 * * 0"
+  displayName: Daily midnight build
+  branches:
+    include:
+    - main
+  always: true
 trigger:
 - main
 
@@ -41,7 +41,7 @@ steps:
   inputs:
     ${{ if contains(parameters.subscription, 'smoke') }}:
       script: |
-        pytest -v -s  -k "test_tpa_prices"
+        pytest -v -s -k "test_tpa_prices"
     ${{ if contains(parameters.subscription, 'regression') }}:
       script: |
         pytest
