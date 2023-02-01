@@ -1,5 +1,5 @@
 selenium==4.2.0
 webdriver-manager
 pytest==7.2.1
-
+deepdiff
 
