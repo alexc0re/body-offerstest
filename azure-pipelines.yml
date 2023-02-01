@@ -14,8 +14,7 @@ schedules:
     include:
     - main
   always: true
-trigger:
-- main
+
 
 pool:
   vmImage: 'windows-latest'
@@ -41,7 +40,7 @@ steps:
   inputs:
     ${{ if contains(parameters.subscription, 'smoke') }}:
       script: |
-        pytest -v -s -k "test_tpa_prices"
+        pytest -k "test_tpa_prices"
     ${{ if contains(parameters.subscription, 'regression') }}:
       script: |
         pytest
