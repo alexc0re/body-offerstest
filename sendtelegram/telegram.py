@@ -15,7 +15,6 @@ def send_telegram(text: str):
 
     if r.status_code != 200:
         raise Exception("post_text errnor")
-    print(r.json())
 
 if __name__ == '__main__':
   send_telegram("test msg")
