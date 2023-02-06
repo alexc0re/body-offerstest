@@ -38,7 +38,7 @@ class BaseObject:
         # return self.wait.until(ec.visibility_of_all_elements_located(locator))
         return self.wait.until(ec.presence_of_all_elements_located(locator))
 
-    def find_product_price(self, element, locator):
+    def find_elems_in_elem(self, element, locator):
         return element.find_elements_by_css_selector(locator)
 
 
