@@ -40,7 +40,7 @@ class AbusePage(BaseObject):
 
         global names_list, data, aroma_name
 
-        self.open_link(f'shop.perfumersapprentice.com/c-84-bulk-sizes.aspx?pagenum={1}')
+        self.open_link(f'shop.perfumersapprentice.com/c-84-bulk-sizes.aspx?pagenum={3}')
         spisok = []
         aroma_blocks = self.find_product_names(locator=AbusePageLocators.AROMA_BLOCK)
 
@@ -64,9 +64,11 @@ class AbusePage(BaseObject):
 
                     elif prefix == 'doub':
                         spisok.append(price.text)
+                    if len(spisok) > 0:
+                        self.log.info(f'FOR {aroma_name} added value : {spisok}')
 
-                    self.log.info(f'FOR {aroma_name} added value : {spisok}')
-                names_list.update({aroma_name: spisok})
+                if len(spisok) > 0:
+                    names_list.update({aroma_name: spisok})
 
 
             self.log.info('-----------------------')
