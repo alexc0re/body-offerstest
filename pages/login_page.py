@@ -1456,17 +1456,18 @@ class AbusePage(BaseObject):
                 spisok = []
 
                 for price in aroma_prices:
+                    text = price.text
 
                     prefix = price.text[0:4]
 
                     if 'gall' in prefix:
-                        spisok.append(price.text)
+                        spisok.append(text)
 
                     elif prefix == 'case':
-                        spisok.append(price.text.replase['(4) 2week lead time', ''])
+                        spisok.append(text.replace(' (4) 2week lead time', ''))
 
                     elif prefix == 'doub':
-                        spisok.append(price.text.replase['(8) 2 week lead time', ''])
+                        spisok.append(text.replace(' (8) 2 week lead time',''))
                     if len(spisok) > 0:
                         self.log.info(f'FOR {aroma_name} added value : {spisok}')
 
@@ -1490,17 +1491,17 @@ class AbusePage(BaseObject):
                 spisok = []
 
                 for price in aroma_prices:
-
+                    text = price.text
                     prefix = price.text[0:4]
 
                     if 'gall' in prefix:
                         spisok.append(price.text)
 
                     elif prefix == 'case':
-                        spisok.append(price.text)
+                        spisok.append(text.replace(' (4) 2week lead time', ''))
 
                     elif prefix == 'doub':
-                        spisok.append(price.text)
+                        spisok.append(text.replace('(8) 2 week lead time',''))
                     if len(spisok) > 0:
                         self.log.info(f'FOR {aroma_name} added value : {spisok}')
 
@@ -1524,6 +1525,7 @@ class AbusePage(BaseObject):
                 spisok = []
 
                 for price in aroma_prices:
+                    text = price.text
 
                     prefix = price.text[0:4]
 
@@ -1531,10 +1533,10 @@ class AbusePage(BaseObject):
                         spisok.append(price.text)
 
                     elif prefix == 'case':
-                        spisok.append(price.text)
+                        spisok.append(text.replace('case (4) 2week lead time', ''))
 
                     elif prefix == 'doub':
-                        spisok.append(price.text)
+                        spisok.append(text.replace('(8) 2 week lead time',''))
                     if len(spisok) > 0:
                         self.log.info(f'FOR {aroma_name} added value : {spisok}')
 
@@ -1556,14 +1558,14 @@ class AbusePage(BaseObject):
                     self.log.info(f'arr1 = {arr}')
                     self.log.info(f'arr2 = {arr2}')
                     if arr[i] != arr2[i]:
-                        send_telegram(f" {products} \nOLD  {arr[i]} \nNEW {arr2[i]}")
+                        self.log.info(f" {products} \nOLD  {arr2[i]} \nNEW {arr[i]}")
 
                         i += 1
                     else:
                         i += 1
             else:
-                send_telegram(f'New position was added/removed \n\nOld file:\n{products}  {arr} '
-                      f'\n\nNew file: \n{products}  {arr2}')
+                self.log.info(f'New position was added/removed \n\nOld file:\n{products}  {arr2} '
+                      f'\n\nNew file: \n{products}  {arr}')
 
             for key, value in names_list.items():
                 print(key)
