@@ -1,1 +1,6 @@
 venv
+logfile.log
+__pycache__
+output.json
+pytest_html_report.html
+archive
