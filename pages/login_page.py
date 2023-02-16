@@ -37,27 +37,26 @@ class AbusePage(BaseObject):
         time.sleep(5)
 
     def count_find_elements(self):
+
         global names_list, data, aroma_name
 
-        self.open_link(f'shop.perfumersapprentice.com/c-84-bulk-sizes.aspx?pagenum={3}')
+        self.open_link(f'shop.perfumersapprentice.com/c-84-bulk-sizes.aspx?pagenum={1}')
         spisok = []
         aroma_blocks = self.find_product_names(locator=AbusePageLocators.AROMA_BLOCK)
 
         for block in aroma_blocks:
             aroma_names = self.find_elems_in_elem(block, 'h2')
-
-
             for names in aroma_names:
                 aroma_name = names.text
                 self.log.info(f"aroma name = {aroma_name}")
                 aroma_prices = self.find_elems_in_elem(block, 'li')
-                spisok.clear()
-
+                spisok = []
 
                 for price in aroma_prices:
+
                     prefix = price.text[0:4]
 
-                    if  'gall' in prefix :
+                    if 'gall' in prefix:
                         spisok.append(price.text)
 
                     elif prefix == 'case':
@@ -66,23 +65,16 @@ class AbusePage(BaseObject):
                     elif prefix == 'doub':
                         spisok.append(price.text)
 
-
-
                     self.log.info(f'FOR {aroma_name} added value : {spisok}')
-
-            if len(spisok) > 0:
-                self.log.info(f'UPDATING NAMES LIST WITH {aroma_name} values : {spisok}')
                 names_list.update({aroma_name: spisok})
 
 
+            self.log.info('-----------------------')
+            self.log.info(names_list)
 
 
-                self.log.info(f'FULL AROMA LOG {aroma_name}  === {spisok}')
 
-            self.log.info(f'names_list == {names_list}')
-        self.log.info(f'AGAIN NAMES == {names_list}')
 
-        return names_list
 
     def compare_dicts(self):
         global names_list, data
