@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from pages.login_page import AbusePage
+
 options = Options()
 
 
@@ -13,10 +14,6 @@ def pytest_addoption(parser):
 
     parser.addoption('--browsermode', action='store', default='start-maximized',  # Browser mode selection
                      help="--headless mode")
-
-
-
-
 
 
 @pytest.fixture(scope="session")
@@ -30,7 +27,6 @@ def driver(request):
     yield driver
     print("\nquit browser..")
     driver.quit()
-
 
 
 @pytest.fixture
