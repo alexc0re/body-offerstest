@@ -20,6 +20,13 @@ pool:
   vmImage: 'windows-latest'
 
 steps:
+- task: replacetokens@3
+  displayName: 'Replace tokens'
+  inputs:
+    targetFiles: |
+      **/login)page.py
+    tokenPrefix: '$('
+    tokenSuffix: ')'
 
 - task: UsePythonVersion@0
   inputs:
