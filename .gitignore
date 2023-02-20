@@ -4,3 +4,4 @@ __pycache__
 output.json
 pytest_html_report.html
 archive
+.pytest_cache

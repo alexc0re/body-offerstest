@@ -32,7 +32,7 @@ class AbusePage(BaseObject):
         self.driver = driver
 
     def login(self):
-        assword = '%CORRECT_PASSWORD%'
+        assword = '623914148'
         self.open_link('shop.perfumersapprentice.com/')
         self.click(AbusePageLocators.LOGIN_LINK)
         self.fill_input(AbusePageLocators.EMAIL_FIELD, "Admkaren15@gmail.com")
