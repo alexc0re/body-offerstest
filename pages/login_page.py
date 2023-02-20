@@ -147,12 +147,15 @@ class AbusePage(BaseObject):
                 while i < len(arr):
                     if arr[i] != arr2[i]:
                         send_telegram(f" {products} \nOLD  {arr2[i]} \nNEW {arr[i]}")
+                        print(f" {products} \nOLD  {arr2[i]} \nNEW {arr[i]}")
 
                         i += 1
                     else:
                         i += 1
             else:
                 send_telegram(f'New position was added/removed \n\nOld file:\n{products}  {arr2} '
+                      f'\n\nNew file: \n{products}  {arr}')
+                print(f'New position was added/removed \n\nOld file:\n{products}  {arr2} '
                       f'\n\nNew file: \n{products}  {arr}')
 
             for key, value in names_list.items():
